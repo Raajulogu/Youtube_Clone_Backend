@@ -45,5 +45,3 @@ async function SendNotification({ id, content }) {
   }
 
 export { decodeJwtToken,getCurrentDate,SendNotification,generateJwtToken };
-
-//Hi Anitha !

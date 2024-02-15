@@ -5,34 +5,32 @@ import { decodeJwtToken } from "../../service.js";
 
 let router = express.Router();
 
-// Add watchlater videos
-router.put("/add-watchlater", async (req, res) => {
+// Add videos to History
+router.put("/add-history", async (req, res) => {
   try {
     let token = req.headers["x-auth"];
     let data = req.body.id;
     let userId = decodeJwtToken(token);
     let user = await User.findById({ _id: userId });
-    //adding new videos to existing watched list
-    let watchlater = [data, ...user.watchlater];
-    let addWacheLaterVideos = await Videos.findOneAndUpdate(
+    //adding new videos to existing history
+    let history = [data, ...user.history];
+    let addHistory = await Videos.findOneAndUpdate(
       { _id: userId },
-      { $set: { watchlater: watchlater } }
+      { $set: { history: history } }
     );
 
-    if (!addWacheLaterVideos) {
+    if (!addHistory) {
       return res.status(400).json({ messag: "error Occured" });
     }
-    res
-      .status(200)
-      .json({ message: "Video Added WatchLater list Successfully!" });
+    res.status(200).json({ message: "Video Added History Successfully!" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: err.message });
   }
 });
 
-// Videos remove to watch later list
-router.put("/remove-watchlater", async (req, res) => {
+// Videos remove to History
+router.put("/remove-videos-history", async (req, res) => {
   try {
     let token = req.headers["x-auth"];
     let id = req.body.id;
@@ -40,21 +38,21 @@ router.put("/remove-watchlater", async (req, res) => {
 
     let user = await User.findById({ _id: userId });
 
-    // Remove Video from watched list
-    let watchlater = user.watchlater.filter((val) => {
+    // Remove Video from History
+    let history = user.history.filter((val) => {
       if (id !== val.id) {
         return val;
       }
     });
     await User.findOneAndUpdate(
       { _id: userId },
-      { $set: { watchlater: watchlater } }
+      { $set: { history: history } }
     );
 
-    res.status(200).json({ messag: "Remove Watchlater Video Successfully" });
+    res.status(200).json({ messag: "Remove Video History Successfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: err.message });
   }
 });
-export let whatchLater = router;
+export let historyLater = router;
