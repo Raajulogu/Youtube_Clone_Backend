@@ -40,3 +40,5 @@ router.put("/comment/:id", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+export let commentRouter = router;

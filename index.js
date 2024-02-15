@@ -6,6 +6,10 @@ import { authRouter } from "./Routers/User/auth.js";
 import { likeRouter } from "./Routers/Videos/like.js";
 import { subscribeRouter } from "./Routers/User/subscribe.js";
 import { videoRouter } from "./Routers/Videos/video.js";
+import { whatchLater } from "./Routers/User/watchlater.js";
+import { historyLater } from "./Routers/User/history.js";
+import { notificationRouter } from "./Routers/User/notification.js";
+import { commentRouter } from "./Routers/Videos/comment.js";
 
 //ENV Configuration
 dotenv.config();
@@ -21,11 +25,14 @@ app.use(cors());
 dbConnection();
 
 //routes
-app.use("/api/auth",authRouter);
-app.use("/api/subscribe",subscribeRouter);
-app.use("/api/like",likeRouter);
-
-app.use("/api/video",videoRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/subscribe", subscribeRouter);
+app.use("/api/like", likeRouter);
+app.use("/api/comment", commentRouter);
+app.use("/api/notification", notificationRouter);
+app.use("/api/watchlater", whatchLater);
+app.use("/api/history", historyLater);
+app.use("/api/video", videoRouter);
 
 //Server connection
 app.listen(PORT, () => console.log(`Server listening on ${PORT}`));

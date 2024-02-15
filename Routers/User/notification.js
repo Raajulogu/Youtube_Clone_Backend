@@ -26,3 +26,5 @@ router.put("/update-notification", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+export let notificationRouter = router;
