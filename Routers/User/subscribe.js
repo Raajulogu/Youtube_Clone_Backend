@@ -1,5 +1,6 @@
 import express from "express";
-import { User, decodeJwtToken } from "../../Models/User.js";
+import { User } from "../../Models/User.js";
+import { decodeJwtToken } from "../../service.js";
 
 let router = express.Router();
 
@@ -30,7 +31,7 @@ router.put("/subscribe-channel", async (req, res) => {
     res.status(200).json({ message: "Subscribed Successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -70,7 +71,7 @@ router.put("/unsubscribe-channel", async (req, res) => {
     res.status(200).json({ message: "UnSubscribed Successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -89,10 +90,12 @@ router.get("/get-subscribes", async (req, res) => {
       }
     });
 
-    res.status(200).json({ message: "Subscribed Channels Got Successfully", subscribes });
+    res
+      .status(200)
+      .json({ message: "Subscribed Channels Got Successfully", subscribes });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -110,10 +113,12 @@ router.get("/get-subscribers", async (req, res) => {
       }
     });
 
-    res.status(200).json({ message: "Subscribers Got Successfully", subscribers });
+    res
+      .status(200)
+      .json({ message: "Subscribers Got Successfully", subscribers });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 

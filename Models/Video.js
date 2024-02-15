@@ -23,6 +23,7 @@ let notesSchema = new mongoose.Schema({
   },
   views: {
     type: "number",
+    default: 0,
   },
   comments:{
     type: "array",

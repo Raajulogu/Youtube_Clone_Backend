@@ -1,10 +1,9 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import multer from "multer";
-import { User, decodeJwtToken, generateJwtToken } from "../../Models/User.js";
+import { User} from "../../Models/User.js";
+import { decodeJwtToken, generateJwtToken } from "../../service.js";
 
 let router = express.Router();
-
 
 //SignUp
 router.post("/signup", async (req, res) => {
@@ -30,7 +29,7 @@ router.post("/signup", async (req, res) => {
     res.status(200).json({ message: "SignUp Successfully", token });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -54,7 +53,7 @@ router.post("/login", async (req, res) => {
     res.status(200).json({ message: "Login Successfully", token });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ merror: err.message });
   }
 });
 
@@ -80,7 +79,7 @@ router.put("/reset-password", async (req, res) => {
     res.status(200).json({ message: "Password Reseted Successfully", token });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -94,7 +93,7 @@ router.get("/get-user-data", async (req, res) => {
     res.status(200).json({ message: "User Data Got Successfully", user });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -106,7 +105,7 @@ router.get("/get-user-data-by-email", async (req, res) => {
     res.status(200).json({ message: "User Data Got Successfully", user });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -123,13 +122,14 @@ router.put("/update-user-data", async (req, res) => {
         $set: {
           channelName: req.body.name,
           image: req.body.image,
+          avatar: req.body.avatar,
         },
       }
     );
     res.status(200).json({ message: "User Data Updated Successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
@@ -143,7 +143,7 @@ router.delete("/delete-user", async (req, res) => {
     res.status(200).json({ message: "User Deleted Successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 

@@ -5,6 +5,7 @@ import { dbConnection } from "./db.js";
 import { authRouter } from "./Routers/User/auth.js";
 import { likeRouter } from "./Routers/Videos/like.js";
 import { subscribeRouter } from "./Routers/User/subscribe.js";
+import { videoRouter } from "./Routers/Videos/video.js";
 
 //ENV Configuration
 dotenv.config();
@@ -23,6 +24,8 @@ dbConnection();
 app.use("/api/auth",authRouter);
 app.use("/api/subscribe",subscribeRouter);
 app.use("/api/like",likeRouter);
+
+app.use("/api/video",videoRouter);
 
 //Server connection
 app.listen(PORT, () => console.log(`Server listening on ${PORT}`));

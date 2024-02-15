@@ -1,11 +1,12 @@
 import express from "express";
-import {  Videos } from "../../Models/Video.js";
-import { User, decodeJwtToken } from "../../Models/User.js";
+import { Videos } from "../../Models/Video.js";
+import { User } from "../../Models/User.js";
+import { decodeJwtToken } from "../../service.js";
 
 let router = express.Router();
 
 //Add Liked Videos
-router.put("/like", async (req, res) => {
+router.put("/like-video", async (req, res) => {
   try {
     let token = req.headers["x-auth"];
     let data = req.body.id;
@@ -22,23 +23,30 @@ router.put("/like", async (req, res) => {
     if (!addLikedVideos)
       return res.status(400).json({ message: "Error Occured" });
 
+    //Adding like to video
+    let videoData = await Videos.findById({ _id: data });
+    let likes = [userId, ...videoData.likes];
+    let video = await Videos.findOneAndUpdate(
+      { _id: data },
+      { $set: { likes: likes } }
+    );
     res.status(200).json({ message: "Video added to likedlist Successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
 //Get User Liked videos
-router.get("/get-likes", async (req, res) => {
+router.get("/get-liked-videos", async (req, res) => {
   try {
     let token = req.headers["x-auth"];
     let userId = decodeJwtToken(token);
 
-    let Videos = await Videos.find();
+    let Video = await Videos.find();
     let user = await User.findById({ _id: userId });
     //filter Favourites Profiles
-    let likedVideos = Videos.filter((val) => {
+    let likedVideos = Video.filter((val) => {
       if (user.likedVideos.includes(val._id)) {
         return val;
       }
@@ -49,12 +57,12 @@ router.get("/get-likes", async (req, res) => {
       .json({ message: "Liked Videos Got Successfully", likedVideos });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
 // UnLike video
-router.put("/unlike", async (req, res) => {
+router.put("/unlike-video", async (req, res) => {
   try {
     let token = req.headers["x-auth"];
     let id = req.body.id;
@@ -72,10 +80,21 @@ router.put("/unlike", async (req, res) => {
       { $set: { likedVideos: likedVideos } }
     );
 
+    //Removing like from video
+    let videoData = await Videos.findById({ _id: id });
+    let likes = videoData.likes.filter((val) => {
+      if (userId !== val._id) {
+        return val;
+      }
+    });
+    let video = await Videos.findOneAndUpdate(
+      { _id: id },
+      { $set: { likes: likes } }
+    );
     res.status(200).json({ message: "UnLiked Video Successfully" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ error: err.message });
   }
 });
 
