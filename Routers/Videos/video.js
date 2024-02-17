@@ -27,24 +27,20 @@ let storage = multer.diskStorage({
 let upload = multer({ storage: storage });
 
 //Upload Video
-router.post("/upload-video", upload.single("video"), async (req, res) => {
+router.post("/upload-video", async (req, res) => {
   try {
     let token = req.headers["x-auth"];
     let userId = decodeJwtToken(token);
     let user = await User.findById({ _id: userId });
 
-    let { filename, path: filePath } = req.file;
-    let title = req.body.title;
-    let body = req.body.body;
-    let channelName = user.channelName;
+    let { title, body, type,video } = req.body;
+    let channelName = user.channelName?user.channelName:"Test";
     let creator = user.name;
-    let type = req.body.type;
     //Current Date
     let date = getCurrentDate();
     //Uploading video to Videos collection
-    const video = await new Videos({
-      filename,
-      filePath,
+    const uploadvideo = await new Videos({
+      video,
       title,
       body,
       channelName,
@@ -77,6 +73,7 @@ router.post("/upload-video", upload.single("video"), async (req, res) => {
     res.status(201).json({ message: "Video uploaded Successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
+    console.log(err);
   }
 });
 

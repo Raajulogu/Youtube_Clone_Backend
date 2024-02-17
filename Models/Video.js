@@ -1,11 +1,7 @@
 import mongoose from "mongoose";
 
 let notesSchema = new mongoose.Schema({
-  filename: {
-    type: "string",
-    required: true,
-  },
-  filePath: {
+  video: {
     type: "string",
     required: true,
   },
