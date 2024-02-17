@@ -86,7 +86,7 @@ router.get("/get-subscribes", async (req, res) => {
     //filter Subscribed Channels
     let subscribes = channels.filter((val) => {
       if (user.subscribing.includes(val._id)) {
-        return val;
+        return val._id;
       }
     });
 
