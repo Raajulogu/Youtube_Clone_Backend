@@ -10,6 +10,7 @@ import { whatchLater } from "./Routers/User/watchlater.js";
 import { historyLater } from "./Routers/User/history.js";
 import { notificationRouter } from "./Routers/User/notification.js";
 import { commentRouter } from "./Routers/Videos/comment.js";
+import { channelLater } from "./Routers/User/channel.js";
 
 //ENV Configuration
 dotenv.config();
@@ -29,6 +30,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/subscribe", subscribeRouter);
 app.use("/api/like", likeRouter);
 app.use("/api/comment", commentRouter);
+app.use("/api/channel", channelLater);
 app.use("/api/notification", notificationRouter);
 app.use("/api/watchlater", whatchLater);
 app.use("/api/history", historyLater);
