@@ -29,10 +29,6 @@ let notesSchema = new mongoose.Schema({
     type: "string",
     required: true,
   },
-  channelName:{
-    type: "string",
-    required: true,
-  },
   creator:{
     type: "string",
     required: true,

@@ -34,8 +34,7 @@ router.post("/upload-video", async (req, res) => {
     let user = await User.findById({ _id: userId });
 
     let { title, body, type,video } = req.body;
-    let channelName = user.channelName?user.channelName:"Test";
-    let creator = user.name;
+    let creator = user._id;
     //Current Date
     let date = getCurrentDate();
     //Uploading video to Videos collection
@@ -43,7 +42,6 @@ router.post("/upload-video", async (req, res) => {
       video,
       title,
       body,
-      channelName,
       creator,
       type,
       date,
@@ -61,7 +59,7 @@ router.post("/upload-video", async (req, res) => {
     let content = {
       title,
       date,
-      channelName: user.channelName,
+      channelName: user.channelName ? user.channelName :user.name ,
       image: user.image,
       isViewed: false,
     };
@@ -107,6 +105,7 @@ router.get("/get-videos", async (req, res) => {
       res.status(400).json({ message: "Invalid Authorization" });
     }
     let Video = await Videos.find();
+    Video["channelName"] = user.channelName ? user.channelName:user.name
     res.status(200).json({ message: "Videos Got Successfully", Video });
   } catch (error) {
     console.log(error);
@@ -115,7 +114,7 @@ router.get("/get-videos", async (req, res) => {
 });
 
 //Get All Videos
-router.get("/get-single-video/:id", async (req, res) => {
+router.get("/get-video-byId", async (req, res) => {
   try {
     let token = req.headers["x-auth"];
     let userId = decodeJwtToken(token);
@@ -124,8 +123,7 @@ router.get("/get-single-video/:id", async (req, res) => {
     if (!user) {
       res.status(400).json({ message: "Invalid Authorization" });
     }
-    let id = req.params.id;
-    let Video = await Videos.findById({ _id: id });
+    let Video = await Videos.find({ creator: userId });
 
     res.status(200).json({ message: "Video Got Successfully", Video });
   } catch (error) {

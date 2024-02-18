@@ -18,10 +18,12 @@ router.get("/get-channel/:id", async (req, res) => {
     }
     let channel = await User.findById({ _id: id });
     let Video = await Videos.find({ channelName: channel.channelName });
+    
+    let isOwner= id === userId ? true : false;
     let result = {
       channel,
       Video,
-      isOwner: user._id == channel._id ? true : false,
+      isOwner
     };
 
     res.status(200).json({ message: "Channel Got Successfully", result });
