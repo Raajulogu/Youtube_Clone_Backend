@@ -9,10 +9,12 @@ let router = express.Router();
 router.get("/get-channel/:id", async (req, res) => {
   try {
     let token = req.headers["x-auth"];
-    let id = req.params.id;
+    let id=req.params.id
     let userId = decodeJwtToken(token);
     let user = await User.findById({ _id: userId });
-
+    if(!req.params.id){
+       id = userId;
+    }
     if (!user) {
       res.status(400).json({ message: "Invalid Authorization" });
     }

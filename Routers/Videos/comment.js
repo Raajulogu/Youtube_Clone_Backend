@@ -1,7 +1,7 @@
 import express from "express";
 import { Videos } from "../../Models/Video.js";
 import { User } from "../../Models/User.js";
-import { getCurrentDate } from "../../service.js";
+import { decodeJwtToken, getCurrentDate } from "../../service.js";
 
 let router = express.Router();
 
