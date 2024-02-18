@@ -51,7 +51,13 @@ router.get("/get-liked-videos", async (req, res) => {
         return val;
       }
     });
+    for(var i = 0; i < likedVideos.length; i++) {
+      let creator = likedVideos[i].creator;
+      let user = await User.findById({ _id: creator });
 
+      likedVideos[i]["channelName"] = user.channelName ? user.channelName:user.name
+      likedVideos[i]["img"] = user.img;
+    }
     res
       .status(200)
       .json({ message: "Liked Videos Got Successfully", likedVideos });

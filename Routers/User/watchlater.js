@@ -73,7 +73,13 @@ router.get("/get-watchlater", async (req, res) => {
         video.push(val);
       }
     });
+    for(var i = 0; i < video.length; i++) {
+      let creator = video[i].creator;
+      let user = await User.findById({ _id: creator });
 
+      video[i]["channelName"] = user.channelName ? user.channelName:user.name
+      video[i]["img"] = user.img;
+    }
     res
       .status(200)
       .json({ messag: "Watchlater Video got Successfully", video });

@@ -39,6 +39,9 @@ let notesSchema = new mongoose.Schema({
   type:{
     type: "string",
     required: true,
+  },
+  img:{
+    type: "string",
   }
 });
 
