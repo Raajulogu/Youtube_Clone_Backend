@@ -14,7 +14,7 @@ router.put("/add-watchlater", async (req, res) => {
     let user = await User.findById({ _id: userId });
     //adding new videos to existing watched list
     let watchlater = [data, ...user.watchlater];
-    let addWacheLaterVideos = await Videos.findOneAndUpdate(
+    let addWacheLaterVideos = await User.findOneAndUpdate(
       { _id: userId },
       { $set: { watchlater: watchlater } }
     );
@@ -42,7 +42,7 @@ router.put("/remove-watchlater", async (req, res) => {
 
     // Remove Video from watched list
     let watchlater = user.watchlater.filter((val) => {
-      if (id !== val.id) {
+      if (id !== val) {
         return val;
       }
     });
@@ -52,6 +52,31 @@ router.put("/remove-watchlater", async (req, res) => {
     );
 
     res.status(200).json({ messag: "Remove Watchlater Video Successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get watch later list
+router.get("/get-watchlater", async (req, res) => {
+  try {
+    let token = req.headers["x-auth"];
+    let userId = decodeJwtToken(token);
+    let user = await User.findById({ _id: userId });
+
+    let videoData = await Videos.find();
+
+    let video = [];
+    videoData.map((val) => {
+      if (user.watchlater.includes(val._id)) {
+        video.push(val);
+      }
+    });
+
+    res
+      .status(200)
+      .json({ messag: "Watchlater Video got Successfully", video });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: err.message });

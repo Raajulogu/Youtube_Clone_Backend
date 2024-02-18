@@ -40,7 +40,7 @@ router.put("/remove-videos-history", async (req, res) => {
 
     // Remove Video from History
     let history = user.history.filter((val) => {
-      if (id !== val.id) {
+      if (id !== val) {
         return val;
       }
     });
@@ -55,4 +55,30 @@ router.put("/remove-videos-history", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// Get history list
+router.get("/get-history", async (req, res) => {
+  try {
+    let token = req.headers["x-auth"];
+    let userId = decodeJwtToken(token);
+    let user = await User.findById({ _id: userId });
+
+    let videoData = await Videos.find();
+
+    let video = [];
+    videoData.map((val) => {
+      if (user.history.includes(val._id)) {
+        video.push(val);
+      }
+    });
+
+    res
+      .status(200)
+      .json({ messag: "History Video got Successfully", video });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export let historyLater = router;
