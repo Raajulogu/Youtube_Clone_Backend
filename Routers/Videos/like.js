@@ -14,7 +14,10 @@ router.put("/like-video", async (req, res) => {
 
     let user = await User.findById({ _id: userId });
     //adding new videos to existing likes list
-    let likedVideos = [data, ...user.likedVideos];
+    let likedVideos = [...user.likedVideos];
+    if(!likedVideos.includes(data)){
+      likedVideos.push(data)
+    }
     let addLikedVideos = await User.findOneAndUpdate(
       { _id: userId },
       { $set: { likedVideos: likedVideos } }
@@ -25,7 +28,10 @@ router.put("/like-video", async (req, res) => {
 
     //Adding like to video
     let videoData = await Videos.findById({ _id: data });
-    let likes = [userId, ...videoData.likes];
+    let likes = [...videoData.likes];
+    if(!likes.includes(userId)){
+      likes.push(userId)
+    }
     let video = await Videos.findOneAndUpdate(
       { _id: data },
       { $set: { likes: likes } }
@@ -56,7 +62,7 @@ router.get("/get-liked-videos", async (req, res) => {
       let user = await User.findById({ _id: creator });
 
       likedVideos[i]["channelName"] = user.channelName ? user.channelName:user.name
-      likedVideos[i]["img"] = user.img;
+      likedVideos[i]["img"] = user.image;
     }
     res
       .status(200)

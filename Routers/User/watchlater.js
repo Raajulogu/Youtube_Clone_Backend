@@ -13,7 +13,10 @@ router.put("/add-watchlater", async (req, res) => {
     let userId = decodeJwtToken(token);
     let user = await User.findById({ _id: userId });
     //adding new videos to existing watched list
-    let watchlater = [data, ...user.watchlater];
+    let watchlater = [...user.watchlater];
+    if(!watchlater.includes(data)){
+      watchlater.push(data)
+    }
     let addWacheLaterVideos = await User.findOneAndUpdate(
       { _id: userId },
       { $set: { watchlater: watchlater } }
@@ -78,7 +81,7 @@ router.get("/get-watchlater", async (req, res) => {
       let user = await User.findById({ _id: creator });
 
       video[i]["channelName"] = user.channelName ? user.channelName:user.name
-      video[i]["img"] = user.img;
+      video[i]["img"] = user.image;
     }
     res
       .status(200)

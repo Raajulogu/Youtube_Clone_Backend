@@ -1,6 +1,7 @@
 import express from "express";
 import { User } from "../../Models/User.js";
 import { decodeJwtToken } from "../../service.js";
+import { Videos } from "../../Models/Video.js";
 
 let router = express.Router();
 
@@ -16,15 +17,21 @@ router.put("/subscribe-channel", async (req, res) => {
     let channel = await User.findById({ _id: channelId });
 
     //Updating Channel in user session
-    let subscribing = [channelId, ...user.subscribing];
+    let subscribing = [...user.subscribing];
+    if (!subscribing.includes(channelId)) {
+      subscribing.push(channelId);
+    }
     await User.findOneAndUpdate(
       { _id: userId },
       { $set: { subscribing: subscribing } }
     );
     //Updating Subscriber in channel session
-    let subscribers = [userId, ...channel.subscribers];
+    let subscribers = [...channel.subscribers];
+    if (!subscribers.includes(userId)) {
+      subscribers.push(userId);
+    }
     await User.findOneAndUpdate(
-      { _id: sender },
+      { _id: channelId },
       { $set: { subscribers: subscribers } }
     );
 
@@ -81,20 +88,22 @@ router.get("/get-subscribes", async (req, res) => {
     let token = req.headers["x-auth"];
     let userId = decodeJwtToken(token);
 
-    let channels = await User.find({ youtuber: true });
+    let videos = await Videos.find();
     let user = await User.findById({ _id: userId });
     //filter Subscribed Channels
-    let subscribes = channels.filter((val) => {
-      if (user.subscribing.includes(val._id)) {
-        return val._id;
+    let subscribes = videos.filter((val) => {
+      if (user.subscribing.includes(val.creator)) {
+        return val;
       }
     });
-    for(var i = 0; i < subscribes.length; i++) {
+    for (var i = 0; i < subscribes.length; i++) {
       let creator = subscribes[i].creator;
       let user = await User.findById({ _id: creator });
 
-      subscribes[i]["channelName"] = user.channelName ? user.channelName:user.name
-      subscribes[i]["img"] = user.img;
+      subscribes[i]["channelName"] = user.channelName
+        ? user.channelName
+        : user.name;
+      subscribes[i]["img"] = user.image;
     }
     res
       .status(200)
@@ -121,7 +130,7 @@ router.get("/get-subscribers", async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Subscribers Got Successfully", subscribers });
+      .json({ message: "Subscribers Got Successfully", subscribers:subscribers.length });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: err.message });

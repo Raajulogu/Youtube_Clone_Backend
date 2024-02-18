@@ -110,7 +110,7 @@ router.get("/get-videos", async (req, res) => {
       let user = await User.findById({ _id: creator });
 
       Video[i]["channelName"] = user.channelName ? user.channelName:user.name
-      Video[i]["img"] = user.img;
+      Video[i]["img"] = user.image;
     }
     res.status(200).json({ message: "Videos Got Successfully", Video });
   } catch (error) {
@@ -136,7 +136,7 @@ router.get("/get-video-byId", async (req, res) => {
       let user = await User.findById({ _id: creator });
 
       Video[i]["channelName"] = user.channelName ? user.channelName:user.name
-      Video[i]["img"] = user.img;
+      Video[i]["img"] = user.image;
     }
 
     res.status(200).json({ message: "Video Got Successfully", Video });
