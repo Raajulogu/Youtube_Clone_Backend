@@ -110,10 +110,8 @@ router.get("/get-videos", async (req, res) => {
       let user = await User.findById({ _id: creator });
 
       Video[i]["channelName"] = user.channelName ? user.channelName:user.name
+      Video[i]["img"] = user.img;
     }
-    Video.map((val)=>{
-      
-    })
     res.status(200).json({ message: "Videos Got Successfully", Video });
   } catch (error) {
     console.log(error);
@@ -132,6 +130,14 @@ router.get("/get-video-byId", async (req, res) => {
       res.status(400).json({ message: "Invalid Authorization" });
     }
     let Video = await Videos.find({ creator: userId });
+
+    for(var i = 0; i < Video.length; i++) {
+      let creator = Video[i].creator;
+      let user = await User.findById({ _id: creator });
+
+      Video[i]["channelName"] = user.channelName ? user.channelName:user.name
+      Video[i]["img"] = user.img;
+    }
 
     res.status(200).json({ message: "Video Got Successfully", Video });
   } catch (error) {

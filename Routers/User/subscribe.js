@@ -89,7 +89,13 @@ router.get("/get-subscribes", async (req, res) => {
         return val._id;
       }
     });
+    for(var i = 0; i < subscribes.length; i++) {
+      let creator = subscribes[i].creator;
+      let user = await User.findById({ _id: creator });
 
+      subscribes[i]["channelName"] = user.channelName ? user.channelName:user.name
+      subscribes[i]["img"] = user.img;
+    }
     res
       .status(200)
       .json({ message: "Subscribed Channels Got Successfully", subscribes });

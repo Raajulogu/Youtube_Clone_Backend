@@ -14,7 +14,7 @@ router.put("/add-history", async (req, res) => {
     let user = await User.findById({ _id: userId });
     //adding new videos to existing history
     let history = [data, ...user.history];
-    let addHistory = await Videos.findOneAndUpdate(
+    let addHistory = await User.findOneAndUpdate(
       { _id: userId },
       { $set: { history: history } }
     );
@@ -71,7 +71,13 @@ router.get("/get-history", async (req, res) => {
         video.push(val);
       }
     });
+    for(var i = 0; i < video.length; i++) {
+      let creator = video[i].creator;
+      let user = await User.findById({ _id: creator });
 
+      video[i]["channelName"] = user.channelName ? user.channelName:user.name
+      video[i]["img"] = user.img;
+    }
     res
       .status(200)
       .json({ messag: "History Video got Successfully", video });
