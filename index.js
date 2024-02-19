@@ -11,6 +11,7 @@ import { historyLater } from "./Routers/User/history.js";
 import { notificationRouter } from "./Routers/User/notification.js";
 import { commentRouter } from "./Routers/Videos/comment.js";
 import { channelLater } from "./Routers/User/channel.js";
+import { searchRouter } from "./Routers/Videos/search.js";
 
 //ENV Configuration
 dotenv.config();
@@ -35,6 +36,7 @@ app.use("/api/notification", notificationRouter);
 app.use("/api/watchlater", whatchLater);
 app.use("/api/history", historyLater);
 app.use("/api/video", videoRouter);
+app.use("/api/search", searchRouter);
 
 //Server connection
 app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
