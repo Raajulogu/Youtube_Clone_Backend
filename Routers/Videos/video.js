@@ -48,7 +48,7 @@ router.post("/upload-video", async (req, res) => {
     }).save();
 
     //Update video to user's videos
-    let videos = [video._id, ...user.videos];
+    let videos = [uploadvideo._id, ...user.videos];
     let updateChannelVideos = await User.findOneAndUpdate(
       { _id: userId },
       { $set: { videos: videos } }
@@ -63,7 +63,7 @@ router.post("/upload-video", async (req, res) => {
       image: user.image,
       isViewed: false,
       id:user._id,
-      video:video._id
+      video:uploadvideo._id
     };
     //Calling function for send notification
     user.subscribers.map((val) => {

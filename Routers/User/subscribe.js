@@ -114,23 +114,16 @@ router.get("/get-subscribes", async (req, res) => {
   }
 });
 
-router.get("/get-subscribers", async (req, res) => {
+router.get("/get-subscribers/:id", async (req, res) => {
   try {
-    let token = req.headers["x-auth"];
-    let userId = decodeJwtToken(token);
+    let id = req.params.id;
 
-    let users = await User.find();
-    let channel = await User.findById({ _id: userId });
-    //filter Subscribers Data
-    let subscribers = users.filter((val) => {
-      if (channel.subscribers.includes(val._id)) {
-        return val;
-      }
-    });
-
+    let channel = await User.findById({ _id: id });
+    let subscribers =
+      channel && channel.subscribers ? channel.subscribers.length : 0;
     res
       .status(200)
-      .json({ message: "Subscribers Got Successfully", subscribers:subscribers.length });
+      .json({ message: "Subscribers Got Successfully", subscribers });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: err.message });
