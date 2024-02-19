@@ -62,6 +62,8 @@ router.post("/upload-video", async (req, res) => {
       channelName: user.channelName ? user.channelName :user.name ,
       image: user.image,
       isViewed: false,
+      id:user._id,
+      video:video._id
     };
     //Calling function for send notification
     user.subscribers.map((val) => {
