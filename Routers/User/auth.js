@@ -22,6 +22,7 @@ router.post("/signup", async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword,
+      channelName: req.body.name,
     }).save();
 
     //generate jwtToken
@@ -29,7 +30,7 @@ router.post("/signup", async (req, res) => {
     res.status(200).json({ message: "SignUp Successfully", token });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: error.message });
   }
 });
 
