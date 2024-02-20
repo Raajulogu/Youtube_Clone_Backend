@@ -12,7 +12,7 @@ router.put("/update-notification", async (req, res) => {
     let user = await User.findById({ _id: userId });
     //Traverse the notifications array
     user.notifications.map((val) => {
-      val.isViewed == true;
+      val.isViewed = true;
     });
     let notifications = [...user.notifications];
     //Update Notification
